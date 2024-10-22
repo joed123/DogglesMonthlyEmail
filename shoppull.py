@@ -50,7 +50,11 @@ def get_shopify_inventory():
 
     df = pd.DataFrame(data)
 
-    df_selected = df[['Product', 'SKU', 'Variant', 'Inventory Quantity']]
+    df_filtered = df[df['Inventory Quantity'] > 0]
+
+    df_selected = df_filtered[[
+        'Product', 'SKU', 'Variant', 'Inventory Quantity'
+        ]]
 
     df_selected.columns = ['PRODUCT', 'SKU', 'VARIANT', 'QUANTITY']
 
