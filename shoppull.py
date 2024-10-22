@@ -62,8 +62,11 @@ def get_shopify_inventory():
 
 
 def send_inventory_email(dataframe):
-    filename = f"Inventory_{datetime.now().strftime('%Y-%m-%d')}.xlsx"
-    dataframe.to_excel(filename, index=False)
+    xlsx_filename = f"Inventory_{datetime.now().strftime('%Y-%m-%d')}.xlsx"
+    csv_filename = f"Inventory_{datetime.now().strftime('%Y-%m-%d')}.csv"
+
+    dataframe.to_excel(xlsx_filename, index=False)
+    dataframe.to_csv(csv_filename, index=False)
 
     message = MIMEMultipart()
     message["From"] = EMAIL_SENDER
@@ -77,9 +80,14 @@ def send_inventory_email(dataframe):
     
     message.attach(MIMEText(body, "plain"))
 
-    with open(filename, "rb") as attachment:
-        part = MIMEApplication(attachment.read(), Name=filename)
-        part["Content-Disposition"] = f'attachment; filename="{filename}"'
+    with open(xlsx_filename, "rb") as attachment:
+        part = MIMEApplication(attachment.read(), Name=xlsx_filename)
+        part["Content-Disposition"] = f'attachment; filename="{xlsx_filename}"'
+        message.attach(part)
+    
+    with open(csv_filename, "rb") as attachment:
+        part = MIMEApplication(attachment.read(), Name=csv_filename)
+        part["Content-Disposition"] = f'attachment; filename="{csv_filename}"'
         message.attach(part)
 
     try:
