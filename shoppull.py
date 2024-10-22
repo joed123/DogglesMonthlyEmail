@@ -49,7 +49,13 @@ def get_shopify_inventory():
                 "Inventory Quantity": variant["inventory_quantity"]
             })
 
-    return pd.DataFrame(data)
+    df = pd.DataFrame(data)
+
+    df_selected = df[['Product', 'SKU', 'Variant', 'Inventory Quantity']]
+
+    df_selected.columns = ['PRODUCT', 'SKU', 'VARIANT', 'QUANTITY']
+
+    return df_selected
 
 
 def send_inventory_email(dataframe):
