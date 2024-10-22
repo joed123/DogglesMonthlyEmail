@@ -18,8 +18,7 @@ CLIENT_EMAILS = ["", ""]
 
 def get_shopify_inventory():
     url = (
-        f"https://{SHOPIFY_STORE}.myshopify.com/"
-        "admin/api/2023-10/products.json"
+        f"https://{SHOPIFY_STORE}"
     )
 
     headers = {
