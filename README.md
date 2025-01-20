@@ -1,1 +1,1 @@
-This script generates inventory reports for Doggles, including product details and pricing information. It retrieves inventory data from Shopify using the Shopify API and sends it via email as Excel and CSV attachments.
+This script generates inventory reports for Doggles, including product details and pricing information. It retrieves inventory data from Shopify using the Shopify API and emails it to customers as Excel and CSV attachments.
