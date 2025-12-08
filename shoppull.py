@@ -6,17 +6,27 @@ from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 from datetime import datetime
 
+# Credentials redacted for security
 
+# Shopify API Configuration
 SHOPIFY_STORE = ""
 SHOPIFY_ACCESS_TOKEN = ""
+
+# Email Server (SMTP) Configuration
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
 EMAIL_SENDER = ""
 EMAIL_PASSWORD = ""
+
+# Recipient List
 CLIENT_EMAILS = ["", ""]
 
 
 def get_shopify_inventory():
+    """
+        Fetches product inventory data from the Shopify store API, filters for
+        in-stock items, and returns the result as a pandas DataFrame.
+        """
     url = (
         f"https://{SHOPIFY_STORE}"
     )
@@ -38,6 +48,7 @@ def get_shopify_inventory():
     products = response.json().get("products", [])
     data = []
 
+    # Iterate through all products and their variants to extract key inventory details
     for product in products:
         for variant in product["variants"]:
             data.append({
@@ -50,6 +61,7 @@ def get_shopify_inventory():
 
     df = pd.DataFrame(data)
 
+    # Filter out any products/variants that have zero or negative inventory
     df_filtered = df[df['Inventory Quantity'] > 0]
 
     df_selected = df_filtered[[
@@ -62,9 +74,16 @@ def get_shopify_inventory():
 
 
 def send_inventory_email(dataframe):
+    """
+        Takes a pandas DataFrame, saves it as both .xlsx and .csv files,
+        and emails both files as attachments to the list of recipients.
+        """
+
+    # Create time-stamped filenames for the attachments
     xlsx_filename = f"Inventory_{datetime.now().strftime('%Y-%m-%d')}.xlsx"
     csv_filename = f"Inventory_{datetime.now().strftime('%Y-%m-%d')}.csv"
 
+    # Save the DataFrame to both Excel and CSV formats
     dataframe.to_excel(xlsx_filename, index=False)
     dataframe.to_csv(csv_filename, index=False)
 
@@ -90,6 +109,7 @@ def send_inventory_email(dataframe):
         part["Content-Disposition"] = f'attachment; filename="{csv_filename}"'
         message.attach(part)
 
+    # Send Email
     try:
         server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
         server.starttls()
