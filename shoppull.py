@@ -94,8 +94,7 @@ def send_inventory_email(dataframe):
 
     body = ("Hello! Please find attached the latest Doggles monthly inventory "
             "report.\n\nThis is an automated email; please do not reply.\n\n"
-            "For questions or orders, email info@doggles.com or call/text " 
-            "(530) 344-1645.\n\n")
+            "For questions or orders, email or call/text\n\n")
     
     message.attach(MIMEText(body, "plain"))
 
